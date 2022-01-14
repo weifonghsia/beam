@@ -31,17 +31,17 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /** The result of a {@link KafkaIO.Write} transform. */
 @SuppressWarnings({"rawtypes"})
-public class KafkaWriteResult<ProducerRecord> implements POutput {
+public class KafkaWriteResult<T> implements POutput {
   private final Pipeline pipeline;
   private final TupleTag<String> writesTag;
-  private final PCollection<ProducerRecord> failedWrites;
-  private final PCollection<ProducerRecord> successfulWrites;
+  private final PCollection<T> failedWrites;
+  private final PCollection<T> successfulWrites;
 
   private KafkaWriteResult(
       Pipeline pipeline,
       TupleTag<String> writesTag,
-      PCollection<ProducerRecord> failedWrites,
-      PCollection<ProducerRecord> successfulWrites) {
+      PCollection<T> failedWrites,
+      PCollection<T> successfulWrites) {
     this.pipeline = pipeline;
     this.writesTag = writesTag;
     this.failedWrites = failedWrites;
@@ -49,11 +49,11 @@ public class KafkaWriteResult<ProducerRecord> implements POutput {
   }
 
   /** Creates a {@link KafkaWriteResult} in the given {@link Pipeline}. */
-  static <ProducerRecord> KafkaWriteResult in(
+  static <T> KafkaWriteResult in(
       Pipeline pipeline,
       @Nullable TupleTag<String> writesTag,
-      @Nullable PCollection<ProducerRecord> failedWrites,
-      @Nullable PCollection<ProducerRecord> successfulWrites) {
+      @Nullable PCollection<T> failedWrites,
+      @Nullable PCollection<T> successfulWrites) {
     return new KafkaWriteResult(pipeline, null, null, successfulWrites);
   }
 
@@ -61,7 +61,7 @@ public class KafkaWriteResult<ProducerRecord> implements POutput {
    * Returns a {@link PCollection} containing the {@link ProducerRecord}s that were written to
    * Kafka.
    */
-  public PCollection<ProducerRecord> getSuccessfulWrites() {
+  public PCollection<T> getSuccessfulWrites() {
     return successfulWrites;
   }
 
